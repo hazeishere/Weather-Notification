@@ -9,6 +9,15 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import g4f
+
+def generate_sentence():
+    prompt = "Give me a sentence of life ONLY"
+    response = g4f.ChatCompletion.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": prompt}]
+    )
+    return response
 
 def send_weather_notification():
     load_dotenv()
@@ -51,7 +60,8 @@ def send_weather_notification():
         exit(1)
 
     # Create and send the notification
-    push = pb.push_note(f"{time_data.text} 明日天氣預報", f"早上：{morning}°C\n晚上：{night}°C\n{rain}%")
+    sentence = generate_sentence()
+    push = pb.push_note(f"{time_data.text} 明日天氣預報", f"早上：{morning}°C\n晚上：{night}°C\n{rain}%\n{sentence}")
     print("Notification sent!")
 
     # Clean up
